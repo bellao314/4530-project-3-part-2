@@ -69,17 +69,19 @@ void encryptWithPSK(const unsigned char* publicKey, int publicKeyLen,
     int len;
 
     // Create and initialize the context. Then call the handleErrors() method
-    
+    if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
 
     // Initialize encryption operation. Then call the handleErrors() method
-    
+    if (!EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, psk, iv)) handleErrors();
 
     // Encrypt the public key. Then call the handleErrors() method
+    if (!EVP_EncryptUpdate(ctx, ciphertext, &len, publicKey, publicKeyLen)) handleErrors();
     
     ciphertextLen = len;
 
     // Finalize encryption. Then call the handleErrors() method
-   
+    if (!EVP_EncryptFinal_ex(ctx, ciphertext + ciphertextLen, &len)) handleErrors();
+
     ciphertextLen += len;
 
     // Clean up
@@ -92,17 +94,19 @@ void decryptWithPSK(const unsigned char* ciphertext, int ciphertextLen,
     int len;
 
     // Initialize decryption context. Then call the handleErrors() method
-    
+    if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
 
     // Initialize decryption operation. Then call the handleErrors() method
-    
+    if (!EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, psk, iv)) handleErrors();
 
     // Decrypt the ciphertext. Then call the handleErrors() method
-    
+    if (!EVP_DecryptUpdate(ctx, decryptedText, &len, ciphertext, ciphertextLen)) handleErrors();
+
     decryptedLen = len;
 
     // Finalize decryption. Then call the handleErrors() method
-    
+    if (!EVP_DecryptFinal_ex(ctx, decryptedText + decryptedLen, &len)) handleErrors();
+
     decryptedLen += len;
 
     // Clean up
