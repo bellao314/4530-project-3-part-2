@@ -12,11 +12,11 @@ void handleClient(int clientSocket) {
     int bytesRead;
 
     // TODO: read the iv from the client
-    
+    bytesRead = recv(clientSocket, iv, EVP_MAX_IV_LENGTH, 0);
 
     unsigned char encryptedBuffer[BUFFER_SIZE];
     // TODO: read the encrypted message from the client and store it in bytesRead
-   
+    bytesRead = recv(clientSocket, encryptedBuffer, BUFFER_SIZE, 0);
 
     unsigned char decryptedBuffer[BUFFER_SIZE];
     int decryptedLen;
@@ -36,20 +36,18 @@ void handleClient(int clientSocket) {
     // TODO: Call DH_get_2048_256() to generate DH parameters
     // You should use that method, so the server and client will use the same p and g
     // and store it in privkey. Then call handleErrors()
-    
+    privkey = DH_get_2048_256();
+    if (!privkey) {
+        handleErrors();
+    }
 
     // TODO: Write a method to generate the public and private key pair
-    
-    
+    DH_generate_key(privkey);
+
     const BIGNUM *pubkey = NULL;
     // TODO: Write a method to extract the public key from privkey and store it in pubkey
     // HINT: DH_get0_pub_key()
-    
-
-    if (pubkey == NULL) {
-        printf("Error: DH public key is NULL\n");
-        handleErrors();
-    }
+    pubkey = DH_get0_pub_key(privkey);
 
     printf("Server's Public Key: ");
     BN_print_fp(stdout, pubkey);
@@ -79,9 +77,9 @@ void handleClient(int clientSocket) {
     encryptWithPSK(pubkey_bin, pubkey_len, (unsigned char*)pre_shared.c_str(), ciphertext, IV, ciphertext_len);
     
     // TODO: send the iv to the client
-    
+    send(clientSocket, IV, EVP_MAX_IV_LENGTH, 0);
     // TODO: send the ciphertext to the client
-    
+    send(clientSocket, ciphertext, ciphertext_len, 0);
     
     std::cout << "Encrypted public key sent to client." << std::endl;
 
@@ -91,7 +89,7 @@ void handleClient(int clientSocket) {
 
     // TODO: compute the shared secret and store it in secret_size
     // HINT: using DH_compute_key()
-    
+    secret_size = DH_compute_key(sharedSecret, clientPubKey, privkey);
 
     std::cout << "Shared Secret (Hex): ";
     for (int i = 0; i < secret_size; i++) {
