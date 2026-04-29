@@ -35,8 +35,11 @@ int main() {
         handleErrors();
     }
 
-
     // TODO: Write a method to generate the public and private key pair
+
+    if (DH_generate_key(privkey) != 1) {
+        handleErrors();
+    }
 
 
     const BIGNUM *pubkey = NULL;
