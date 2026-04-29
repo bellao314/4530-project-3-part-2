@@ -95,6 +95,7 @@ int main() {
     int bytesRead;
 
     // TODO: receive the IV from the server
+    bytesRead = recv(clientSocket, IV, EVP_MAX_IV_LENGTH, 0);
 
 
     unsigned char encryptedBuffer[BUFFER_SIZE];
