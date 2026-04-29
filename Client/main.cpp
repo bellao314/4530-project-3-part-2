@@ -43,8 +43,10 @@ int main() {
 
 
     const BIGNUM *pubkey = NULL;
+
     // TODO: Write a method to extract the public key from privkey and store it in pubkey
     // HINT: DH_get0_pub_key()
+    pubkey = DH_get0_pub_key(privkey);
 
 
     if (pubkey == NULL) {
