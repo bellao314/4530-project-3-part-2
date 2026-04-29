@@ -81,6 +81,7 @@ int main() {
     encryptWithPSK(pubkey_bin, pubkey_len, (unsigned char*)pre_shared.c_str(), ciphertext, iv, ciphertext_len);
 
     // TODO: send the iv to the server
+    send(clientSocket, iv, EVP_MAX_IV_LENGTH, 0);
 
     // TODO: send the ciphertext to the server
 
