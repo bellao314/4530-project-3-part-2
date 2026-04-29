@@ -84,6 +84,7 @@ int main() {
     send(clientSocket, iv, EVP_MAX_IV_LENGTH, 0);
 
     // TODO: send the ciphertext to the server
+    send(clientSocket, ciphertext, ciphertext_len, 0);
 
 
     std::cout << "Encrypted public key sent to server." << std::endl;
