@@ -99,7 +99,9 @@ int main() {
 
 
     unsigned char encryptedBuffer[BUFFER_SIZE];
+
     // TODO: receive the encrypted message from the server and store it in bytesRead
+    bytesRead = recv(clientSocket, encryptedBuffer, BUFFER_SIZE, 0);
 
     unsigned char decryptedBuffer[BUFFER_SIZE];
     int decryptedLen;
@@ -119,7 +121,7 @@ int main() {
 
     // TODO: compute the shared secret and store it in secret_size
     // HINT: using DH_compute_key()
-
+    secret_size = DH_compute_key(sharedSecret, serverPubKey, privkey);
 
     std::cout << "Shared Secret (Hex): ";
     for (int i = 0; i < secret_size; i++) {
