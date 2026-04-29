@@ -29,15 +29,20 @@ int main() {
     // TODO: Call DH_get_2048_256() to generate DH parameters
     // You should use that method, so the server and client will use the same p and g
     // and store it in privkey. Then call handleErrors()
-    
-    
+
+    privkey = DH_get_2048_256();
+    if (!privkey) {
+        handleErrors();
+    }
+
+
     // TODO: Write a method to generate the public and private key pair
-    
-    
+
+
     const BIGNUM *pubkey = NULL;
     // TODO: Write a method to extract the public key from privkey and store it in pubkey
     // HINT: DH_get0_pub_key()
-    
+
 
     if (pubkey == NULL) {
         printf("Error: DH public key is NULL\n");
@@ -71,29 +76,29 @@ int main() {
     encryptWithPSK(pubkey_bin, pubkey_len, (unsigned char*)pre_shared.c_str(), ciphertext, iv, ciphertext_len);
 
     // TODO: send the iv to the server
-    
+
     // TODO: send the ciphertext to the server
-    
+
 
     std::cout << "Encrypted public key sent to server." << std::endl;
 
     // Step 2: Take the server's encrypted public key and decrypt it
-    // read IV from the server 
+    // read IV from the server
     unsigned char IV[EVP_MAX_IV_LENGTH];
     int bytesRead;
 
     // TODO: receive the IV from the server
-    
-    
+
+
     unsigned char encryptedBuffer[BUFFER_SIZE];
     // TODO: receive the encrypted message from the server and store it in bytesRead
-    
+
     unsigned char decryptedBuffer[BUFFER_SIZE];
     int decryptedLen;
 
     // decrypt the encrypted public key
     decryptWithPSK(encryptedBuffer, bytesRead, (unsigned char*)pre_shared.c_str(), decryptedBuffer, IV, decryptedLen);
-        
+
     std::cout << "Decrypted Server's Public Key (Hex): ";
     for (int i = 0; i < decryptedLen; i++) {
         printf("%02x", decryptedBuffer[i]);
@@ -106,7 +111,7 @@ int main() {
 
     // TODO: compute the shared secret and store it in secret_size
     // HINT: using DH_compute_key()
-    
+
 
     std::cout << "Shared Secret (Hex): ";
     for (int i = 0; i < secret_size; i++) {
